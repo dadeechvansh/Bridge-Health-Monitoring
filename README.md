@@ -1,230 +1,189 @@
 # BridgeHealth Monitoring System
 
-> An IoT and AI-powered remote health monitoring system for real-time vital monitoring, anomaly detection, and intelligent alerts.
+An IoT and AI/ML-based remote health monitoring system for continuous vital-sign tracking, anomaly detection, and alerting.
 
-![Status](https://img.shields.io/badge/status-research%20%26%20planning-blue)
-![Backend](https://img.shields.io/badge/backend-FastAPI-009688)
-![Hardware](https://img.shields.io/badge/hardware-ESP32-red)
-![ML](https://img.shields.io/badge/ML-scikit--learn-orange)
+**Status:** Research and planning. The design below describes the intended system; implementation has not yet started.
 
----
+## Table of Contents
 
-## 📌 Overview
+- [Overview](#overview)
+- [Problem Statement](#problem-statement)
+- [Proposed Solution](#proposed-solution)
+- [Monitored Parameters](#monitored-parameters)
+- [AI/ML Component](#aiml-component)
+- [System Architecture](#system-architecture)
+- [Technology Stack](#technology-stack)
+- [Data Flow](#data-flow)
+- [Dashboard](#dashboard)
+- [Safety and Privacy](#safety-and-privacy)
+- [Future Scope](#future-scope)
+- [Repository Structure](#repository-structure)
+- [Project Status](#project-status)
+- [Disclaimer](#disclaimer)
 
-BridgeHealth is an IoT-based healthcare monitoring platform designed to continuously monitor a patient's vital health parameters and make the collected information accessible through a centralized web dashboard.
+## Overview
 
-The system combines IoT sensors, ESP32, backend APIs, database technology, web development, and AI/ML-based anomaly detection to create an end-to-end remote health monitoring solution.
+BridgeHealth is an IoT-based platform that collects a patient's vital health parameters through sensors and makes them available on a centralized web dashboard.
 
-The goal is to bridge the gap between patients, caregivers, and healthcare providers by providing real-time health information and timely alerts when unusual patterns are detected.
+The project combines embedded hardware (ESP32 and sensors), a backend API, a database, a web frontend, and machine-learning-based anomaly detection into a single end-to-end system. Its aim is to give caregivers and healthcare providers timely visibility into a patient's condition, with alerts when unusual readings are detected.
 
-## 📑 Table of Contents
+## Problem Statement
 
-- [Problem Statement](#-problem-statement)
-- [Proposed Solution](#-proposed-solution)
-- [Parameters](#-parameters)
-- [AI/ML Component](#-aiml-component)
-- [System Architecture](#️-system-architecture)
-- [Technology Stack](#️-planned-technology-stack)
-- [How It Works](#-how-it-works)
-- [Dashboard](#-dashboard)
-- [Safety & Privacy](#-safety--privacy)
-- [Future Scope](#-future-scope)
-- [Repository Structure](#-planned-repository-structure)
-- [Project Status](#-project-status)
-- [Disclaimer](#️-disclaimer)
-
----
-
-## 🎯 Problem Statement
-
-Continuous monitoring of a patient's health can be difficult when a caregiver or healthcare professional cannot remain physically present.
-
-Traditional monitoring may involve:
+Continuous monitoring is difficult when a caregiver or healthcare professional cannot be physically present. Conventional approaches often involve:
 
 - Periodic manual measurements
 - Limited historical data
 - Difficulty monitoring patients remotely
 - Delayed awareness of unusual readings
-- Health information scattered across different measurements
+- Health information spread across separate measurements
 
-BridgeHealth aims to provide a centralized system for collecting, processing, monitoring, and analyzing health data continuously.
+BridgeHealth aims to provide one system for collecting, storing, monitoring, and analyzing this data.
 
-## 💡 Proposed Solution
+## Proposed Solution
 
-BridgeHealth uses IoT sensors connected to an ESP32 to collect physiological measurements.
+Sensors connected to an ESP32 collect physiological measurements and send them to a backend service, which stores them, analyzes them, and presents them through a web interface.
 
 ```text
 Patient
-   │
-   ▼
+   |
+   v
 Health Sensors
-   │
-   ▼
-ESP32 / IoT Device
-   │
-   ▼
+   |
+   v
+ESP32 (IoT device)
+   |
+   v
 Internet
-   │
-   ▼
-FastAPI Backend
-   │
-   ├──────────────► Database
-   │
-   ▼
+   |
+   v
+FastAPI Backend ------> Database
+   |
+   v
 AI/ML Analysis
-   │
-   ▼
+   |
+   v
 Monitoring Dashboard
-   │
-   ▼
+   |
+   v
 Alerts / Notifications
 ```
 
-The system will monitor selected health parameters, store historical readings, analyze patterns, and present the information through a web interface.
+## Monitored Parameters
 
-## 🔬 Parameters
+The initial version is planned to support:
 
-The initial system is planned to support parameters such as:
+- Heart rate
+- Blood oxygen saturation (SpO2)
+- Body temperature
+- Additional parameters, depending on the sensors selected
 
-- ❤️ Heart Rate
-- 🫁 SpO₂
-- 🌡️ Body Temperature
-- 🩺 Additional parameters depending on the selected sensors
+The final sensor configuration will be decided during the hardware development phase.
 
-> The final sensor configuration will be determined during the hardware development phase.
+## AI/ML Component
 
-## 🤖 AI/ML Component
-
-AI/ML will be used primarily for **pattern analysis and anomaly detection**, rather than autonomous medical diagnosis.
-
-A simplified workflow:
+Machine learning is used for pattern analysis and anomaly detection. It is not used for medical diagnosis.
 
 ```text
 Sensor Data
-     ↓
-Data Preprocessing
-     ↓
-Historical Health Data
-     ↓
+    |
+    v
+Preprocessing
+    |
+    v
+Historical Data
+    |
+    v
 Pattern Analysis
-     ↓
+    |
+    v
 Anomaly Detection
-     ↓
+    |
+    v
 Potential Alert
 ```
 
-The system can learn or identify normal patterns in collected readings and detect significant deviations that may require attention.
+The system is intended to learn normal patterns from collected readings and flag significant deviations for review.
 
-## 🏗️ System Architecture
+## System Architecture
 
-BridgeHealth will consist of the following major layers:
+| Layer | Responsibility |
+| --- | --- |
+| Sensing | Sensors measure the patient's physiological parameters. |
+| IoT | The ESP32 reads the sensors and sends data to the backend. |
+| Communication | Data is transmitted over the internet using HTTP(S) or MQTT. |
+| Backend | FastAPI handles data ingestion, validation, REST APIs, authentication, and processing. |
+| Database | Readings and patient information are stored for live access and historical analysis. |
+| AI/ML | Anomaly-detection techniques are applied to stored and incoming readings. |
+| Monitoring | A web dashboard shows readings, trends, anomalies, and alerts. |
 
-### 1. Sensing Layer
-Physical sensors collect the patient's physiological measurements.
+## Technology Stack
 
-### 2. IoT Layer
-ESP32 collects sensor readings and communicates with the backend.
+| Component | Technology |
+| --- | --- |
+| Microcontroller | ESP32 |
+| Sensors | To be selected (heart rate / SpO2, temperature) |
+| ESP32 firmware | Python (MicroPython) |
+| Backend | Python, FastAPI |
+| API style | REST |
+| Database | PostgreSQL (tentative) |
+| Machine learning | scikit-learn |
+| Data processing | Pandas, NumPy |
+| Frontend | HTML, CSS, JavaScript |
+| Communication | HTTP(S) or MQTT |
+| Version control | Git and GitHub |
+| Deployment | Cloud-hosted (to be decided) |
 
-### 3. Communication Layer
-Sensor data is transmitted over the internet using an appropriate communication protocol such as HTTP or MQTT.
+The stack may change based on hardware availability, performance, and project requirements.
 
-### 4. Backend Layer
-FastAPI handles:
+## Data Flow
 
-- Data ingestion
-- REST APIs
-- Authentication
-- Data processing
-- Communication between system components
-
-### 5. Database Layer
-Health readings and relevant patient information are stored for real-time access and historical analysis.
-
-### 6. AI/ML Layer
-Machine-learning techniques are explored for identifying abnormal patterns in health data.
-
-### 7. Monitoring Layer
-A web dashboard provides visualization of:
-
-- Current readings
-- Historical trends
-- Patient information
-- Detected anomalies
-- Alerts
-
-## 🛠️ Planned Technology Stack
-
-| Component        | Technology                     |
-| ---------------- | ------------------------------ |
-| Microcontroller  | ESP32                          |
-| Sensors          | Healthcare/physiological sensors |
-| Programming      | Python                         |
-| Backend          | FastAPI                        |
-| APIs             | REST                           |
-| Database         | PostgreSQL / suitable database |
-| ML               | Scikit-learn                   |
-| Data Processing  | Pandas, NumPy                  |
-| Frontend         | HTML, CSS, JavaScript          |
-| Version Control  | Git & GitHub                   |
-| Deployment       | Cloud deployment               |
-| Communication    | HTTP / MQTT                    |
-
-> The final technologies may be adjusted during development based on hardware availability, performance, and system requirements.
-
-## 🔄 How It Works
-
-1. Sensors collect health measurements from the patient.
-2. ESP32 receives and processes the sensor readings.
-3. The IoT device sends the readings to the backend.
+1. Sensors measure the patient's vitals.
+2. The ESP32 reads and pre-processes the sensor values.
+3. The ESP32 sends the readings to the backend.
 4. FastAPI receives and validates the incoming data.
-5. Data is stored in the database.
-6. The AI/ML component analyzes relevant readings and patterns.
-7. The dashboard displays real-time and historical information.
-8. Potentially abnormal patterns can generate alerts for the appropriate user.
+5. Validated readings are stored in the database.
+6. The ML component analyzes the readings and their history.
+7. The dashboard displays live and historical data.
+8. Abnormal patterns can trigger alerts to the relevant users.
 
-## 📊 Dashboard
+## Dashboard
 
-The planned monitoring dashboard will provide a centralized view of patient data.
-
-Possible sections include:
+The planned dashboard provides a single view of patient data, including:
 
 - Current vital readings
 - Health trends
 - Historical measurements
 - Patient information
 - Alerts
-- Sensor/device status
+- Sensor and device status
 
-## 🔐 Safety & Privacy
+## Safety and Privacy
 
-BridgeHealth is intended as a **health monitoring and alerting system, not a medical diagnostic system**.
+BridgeHealth is a monitoring and alerting system, not a diagnostic system. Its outputs are not medical diagnoses, and any concerning reading should be reviewed by a qualified healthcare professional.
 
-The project will avoid presenting AI-generated results as medical diagnoses. Any potentially concerning reading should be reviewed by an appropriate healthcare professional.
+Data security and privacy, including secure transmission and access control, will be considered throughout the design.
 
-Patient data security and privacy will also be considered during system design.
-
-## 🚀 Future Scope
-
-Future versions could explore:
+## Future Scope
 
 - Additional health sensors
 - Mobile application
 - Multi-patient monitoring
 - Caregiver accounts
-- Doctor/healthcare-provider dashboard
+- Doctor / healthcare-provider dashboard
 - More advanced anomaly detection
 - Personalized health baselines
-- Notifications through SMS/email
-- Edge processing
+- SMS and email notifications
+- Edge processing on the device
 - Secure device authentication
 - Integration with additional healthcare devices
-- Improved data privacy and local/self-hosted deployment
+- Improved data privacy and self-hosted deployment options
 
-## 📁 Planned Repository Structure
+## Repository Structure
+
+Planned layout:
 
 ```text
 BridgeHealth/
-│
 ├── backend/
 ├── frontend/
 ├── hardware/
@@ -236,9 +195,9 @@ BridgeHealth/
 └── README.md
 ```
 
-## 📌 Project Status
+## Project Status
 
-**Current Stage:** Research & Planning
+Current stage: **Research and planning**
 
 - [x] Problem identification
 - [x] Initial system concept
@@ -248,20 +207,12 @@ BridgeHealth/
 - [ ] Sensor integration
 - [ ] Backend development
 - [ ] Database implementation
-- [ ] ML/anomaly detection
+- [ ] ML / anomaly detection
 - [ ] Frontend dashboard
 - [ ] System integration
 - [ ] Testing
 - [ ] Deployment
 
-## 👨‍💻 Project Focus
+## Disclaimer
 
-BridgeHealth brings together:
-
-**IoT + Healthcare Sensors + AI/ML + FastAPI + Database + Web Development**
-
-The objective is to build a practical end-to-end system rather than a standalone machine-learning model.
-
-## ⚠️ Disclaimer
-
-BridgeHealth is an academic/software engineering project intended for health monitoring, data visualization, and anomaly-alert experimentation. It is **not** intended to replace professional medical diagnosis, treatment, or emergency healthcare services.
+BridgeHealth is an academic and software engineering project for health monitoring, data visualization, and anomaly-alert experimentation. It is not intended to replace professional medical diagnosis, treatment, or emergency healthcare services.
